@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block titre_page %}{{ titre_page }}{% endblock %}
+{% block content %}
+<div class="content-section form-section">
+    <h2>{{ titre_page }}</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-field">
+            {{ form.nom.label_tag }}
+            {{ form.nom }}
+        </div>
+        <button type="submit" class="button-primary">
+            ➕ Créer le tag
+        </button>
+    </form>
+    <p style="margin-top: 16px;">
+        <a href="{% url 'questions:poser_question' %}">⬅️ Retour au formulaire de question</a>
+    </p>
+</div>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block titre_page %}{{ titre_page }}{% endblock %}
+
+{% block content %}
+<div class="content-section form-section">
+    <h2>{{ titre_page }}</h2>
+    <p class="question-preview">↪️ {{ question.titre }}</p>
+
+    <form method="post" class="styled-response-form">
+        {% csrf_token %}
+        <div class="form-field">
+            <label for="{{ form.contenu.id_for_label }}">
+                <i class="fas fa-reply"></i> {{ form.contenu.label }}
+            </label>
+            {{ form.contenu }}
+        </div>
+        <button type="submit" class="button-primary">
+            ✅ Soumettre la réponse
+        </button>
+    </form>
+</div>
+{% endblock %}

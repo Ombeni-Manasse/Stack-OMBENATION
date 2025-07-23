@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block titre_page %}Détail de la question{% endblock %}
+
+{% block content %}
+<h2 class="page-title"><i class="fas fa-search"></i> {{ question.titre }}</h2>
+
+<div class="question-detail-card">
+    <p class="question-content">{{ question.contenu }}</p>
+    <p class="question-meta">
+        📌 Publiée par <strong>{{ question.auteur }}</strong> le {{ question.date_publication|date:"d M Y H:i" }}
+    </p>
+    {% if user == question.auteur %}
+        <div class="question-actions">
+            <a href="{% url 'questions:modifier_question' question.id %}" class="button-action">✏️ Modifier</a>
+            <a href="{% url 'questions:supprimer_question' question.id %}" class="button-action delete-button" onclick="return confirm('⚠️ Voulez-vous vraiment supprimer cette question ?')">🗑️ Supprimer</a>
+        </div>
+    {% endif %}
+</div>
+
+<hr>
+
+<h3 class="reponses-title">💬 Réponses</h3>
+<a href="#" class="toggle-form-button" onclick="toggleReponseForm(); return false;">➕ Ajouter une réponse</a>
+
+<div class="reponses-list">
+    {% for reponse in question.reponses.all %}
+        <div class="reponse-card {% if reponse.est_meilleure_reponse %}reponse-validee{% endif %}">
+            <p class="reponse-contenu">{{ reponse.contenu }}</p>
+            <p class="reponse-meta">Réponse par <strong>{{ reponse.auteur }}</strong> le {{ reponse.date_publication|date:"d M Y H:i" }}</p>
+
+            <div class="vote-controls">
+                <form method="post" action="{% url 'questions:voter_reponse' reponse.id %}">
+                    {% csrf_token %}
+                    <button type="submit" name="valeur" value="1" class="vote-button" data-id="{{ reponse.id }}" data-valeur="1">👍</button>
+                    <span class="vote-count">{{ reponse.score }}</span>
+                    <button type="submit" name="valeur" value="-1" class="vote-button" data-id="{{ reponse.id }}" data-valeur="-1">👎</button>
+                </form>
+            </div>
+
+            {% if user == reponse.auteur %}
+                <div class="reponse-actions">
+                    <a href="{% url 'questions:modifier_reponse' reponse.id %}" class="button-action">✏️ Modifier</a>
+                    <a href="{% url 'questions:supprimer_reponse' reponse.id %}" class="button-action delete-button" onclick="return confirm('⚠️ Supprimer cette réponse ?')">🗑️ Supprimer</a>
+                </div>
+            {% endif %}
+
+            {% if user == question.auteur and not reponse.est_meilleure_reponse %}
+                <form method="post" action="{% url 'questions:valider_reponse' reponse.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="button-action meilleure-button" data-id="{{ reponse.id }}">🏅 Marquer comme meilleure réponse</button>
+                </form>
+            {% endif %}
+        </div>
+    {% empty %}
+        <p class="no-reponses">Aucune réponse encore pour cette question.</p>
+    {% endfor %}
+</div>
+
+<div id="reponseFormContainer" style="display:none;">
+    <form method="post" action="{% url 'questions:repondre_question' question.id %}" class="form-style">
+        {% csrf_token %}
+        {{ reponse_form.as_p }}
+        <button type="submit" class="button-action">💾 Publier la réponse</button>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% block titre_page %}{{ titre_page }}{% endblock %}
+
+{% block content %}
+<div class="content-section form-section">
+    <h2>{{ titre_page }}</h2>
+    <form method="post" class="styled-question-form">
+        {% csrf_token %}
+
+        <div class="form-field">
+            <label for="{{ form.titre.id_for_label }}">
+                <i class="fas fa-heading"></i> Titre de la question
+            </label>
+            {{ form.titre }}
+        </div>
+
+        <div class="form-field">
+            <label for="{{ form.contenu.id_for_label }}">
+                <i class="fas fa-align-left"></i> Contenu
+            </label>
+            {{ form.contenu }}
+        </div>
+
+        <div class="form-field">
+            <label for="{{ form.tags.id_for_label }}">
+                <i class="fas fa-tags"></i> Tags associés
+            </label>
+            <div style="display: flex; gap: 12px; align-items: center;">
+                <div style="flex: 1;">
+                    {{ form.tags }}
+                </div>
+                <a href="{% url 'questions:ajouter_tag' %}" class="button-add-tag">
+                    ➕ Ajouter un tag
+                </a>
+            </div>
+            <small class="help-text">Tape pour rechercher, sélectionne ou crée un tag 🎯</small>
+        </div>
+
+        <button type="submit" class="button-primary">
+            📤 Publier la question
+        </button>
+    </form>
+</div>
+
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const tagSelect = document.querySelector('.tag-autocomplete');
+    if (tagSelect) {
+        $(tagSelect).select2({
+            tags: true,
+            placeholder: "Sélectionner ou créer des tags",
+            width: '100%',
+            allowClear: true,
+            language: {
+                noResults: () => "Aucun tag trouvé",
+                inputTooShort: () => "Tape un mot clé…"
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

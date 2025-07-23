@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block titre_page %}Connexion{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <h2 class="auth-title">🔐 Connexion à Stack-OMBENATION</h2>
+
+    <form method="post" class="auth-form">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <button type="submit" class="auth-button">🚀 Se connecter</button>
+        <p class="auth-switch">Pas encore de compte ? <a href="{% url 'questions:inscription' %}">Inscrivez-vous</a></p>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block titre_page %}{{ titre_page }}{% endblock %}
+{% block content %}
+
+<h2 class="tags-page-title">
+    <i class="fas fa-fire icon-large"></i> {{ titre_page }}
+</h2>
+
+<div class="tags-wrapper">
+    {% for tag in tags %}
+        <a href="{% url 'questions:filtrer_par_tag' tag.id %}" class="tag-item">
+            <i class="fas fa-tag"></i> {{ tag.nom }} <span class="tag-count">({{ tag.nb_questions }})</span>
+        </a>
+    {% empty %}
+        <p><em>Aucun tag pour le moment.</em></p>
+    {% endfor %}
+</div>
+
+{% endblock %}

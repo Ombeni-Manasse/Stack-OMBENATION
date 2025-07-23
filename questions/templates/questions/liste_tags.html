@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block titre_page %}{{ titre_page }}{% endblock %}
+{% block content %}
+
+<h2 class="tags-page-title">
+    <i class="fas fa-tags icon-large"></i> {{ titre_page }}
+</h2>
+
+<div class="tag-search-bar">
+    <input type="text" id="tagSearchInput" placeholder="🔍 Rechercher un tag...">
+</div>
+
+<div class="tags-wrapper" id="tagsContainer">
+    {% for tag in tags %}
+        <a href="{% url 'questions:filtrer_par_tag' tag.id %}" class="tag-item">
+            <i class="fas fa-tag"></i> {{ tag.nom }}
+        </a>
+    {% empty %}
+        <p><em>🚫 Aucun tag pour le moment.</em></p>
+    {% endfor %}
+</div>
+
+{% endblock %}

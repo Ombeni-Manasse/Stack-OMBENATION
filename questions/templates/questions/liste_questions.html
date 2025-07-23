@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load custom_tags %}
+
+{% block titre_page %}{{ titre_page }}{% endblock %}
+
+{% block content %}
+<h2 class="page-title">
+    <i class="fas fa-question-circle"></i> {{ titre_page }}
+</h2>
+
+<div class="question-list">
+    {% for question in questions %}
+        <div class="question-card">
+            <div class="question-header">
+                <h3 class="question-title">
+                    {{ question.titre }}
+
+                    {% if question.score != None %}
+                        <span class="question-score">
+                            👍 {{ question.score }} vote{{ question.score|pluralize }}
+                        </span>
+                    {% endif %}
+                </h3>
+                <div class="question-actions">
+                    <a href="{% url 'questions:detail_question' question.id %}" class="button-view-detail">
+                        📄 Voir la question
+                    </a>
+                    {% if questions_resolues|get_item:question.id %}
+                        <span class="badge-resolue">✔ Résolue</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <p class="question-meta">
+                📌 Publiée par <strong>{{ question.auteur }}</strong>
+                le {{ question.date_publication|date:"d M Y H:i" }} •
+                💬 {{ question.reponses.count }} réponse{{ question.reponses.count|pluralize }}
+            </p>
+        </div>
+    {% empty %}
+        <p class="no-questions">🚫 Aucune question trouvée.</p>
+    {% endfor %}
+</div>
+
+<div class="pagination">
+    {% if questions.has_previous %}
+        <a href="?page={{ questions.previous_page_number }}" class="page-button">⏮️ Précédent</a>
+    {% endif %}
+
+    {% for num in questions.paginator.page_range %}
+        {% if num == questions.number %}
+            <span class="page-current">{{ num }}</span>
+        {% elif num >= questions.number|add:-2 and num <= questions.number|add:2 %}
+            <a href="?page={{ num }}" class="page-number">{{ num }}</a>
+        {% endif %}
+    {% endfor %}
+
+    {% if questions.has_next %}
+        <a href="?page={{ questions.next_page_number }}" class="page-button">Suivant ⏭️</a>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block titre_page %}Modifier la réponse{% endblock %}
+
+{% block content %}
+<h2 class="page-title">✏️ Modifier ta réponse</h2>
+
+<form method="post" class="form-style">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <button type="submit" class="button-action">💾 Enregistrer</button>
+    <a href="{% url 'questions:detail_question' question_id=reponse.question.id %}" class="button-cancel">↩️ Annuler</a>
+</form>
+{% endblock %}
