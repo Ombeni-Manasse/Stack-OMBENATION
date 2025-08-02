@@ -1,23 +1,52 @@
 {% extends 'base.html' %}
-{% block titre_page %}{{ titre_page }}{% endblock %}
 {% block content %}
 
-<h2 class="tags-page-title">
-    <i class="fas fa-tags icon-large"></i> {{ titre_page }}
-</h2>
+<h2 class="page-title">🎯 Tags disponibles</h2>
 
-<div class="tag-search-bar">
-    <input type="text" id="tagSearchInput" placeholder="🔍 Rechercher un tag...">
-</div>
-
-<div class="tags-wrapper" id="tagsContainer">
+<!-- Barre sticky des tags -->
+<div class="sticky-tags-header">
     {% for tag in tags %}
-        <a href="{% url 'questions:filtrer_par_tag' tag.id %}" class="tag-item">
+        <a href="#" class="tag-item" data-tag-id="{{ tag.id }}">
             <i class="fas fa-tag"></i> {{ tag.nom }}
         </a>
-    {% empty %}
-        <p><em>🚫 Aucun tag pour le moment.</em></p>
     {% endfor %}
 </div>
+
+<!-- Conteneur dynamique pour les questions liées -->
+<div id="questions-par-tag-container"></div>
+
+<!-- JS intégré -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const tagLinks = document.querySelectorAll(".tag-item");
+    const container = document.getElementById("questions-par-tag-container");
+    let activeTagId = null;
+
+    tagLinks.forEach(link => {
+        link.addEventListener("click", function (e) {
+            e.preventDefault();
+            const tagId = this.dataset.tagId;
+
+            // Si on reclique sur le même tag → on ferme
+            if (activeTagId === tagId) {
+                container.innerHTML = "";
+                activeTagId = null;
+                tagLinks.forEach(l => l.classList.remove("tag-item-selected"));
+            } else {
+                fetch(`/questions/fragment/tag/${tagId}/`)
+                    .then(response => response.text())
+                    .then(html => {
+                        container.innerHTML = html;
+                        activeTagId = tagId;
+
+                        // Mise à jour du style actif
+                        tagLinks.forEach(l => l.classList.remove("tag-item-selected"));
+                        this.classList.add("tag-item-selected");
+                    });
+            }
+        });
+    });
+});
+</script>
 
 {% endblock %}

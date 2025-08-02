@@ -11,7 +11,9 @@
 
     <!-- Feuilles de style -->
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
-    <link rel="stylesheet" href="{% static 'fontawesome/css/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'fontawesome/css/all.min.css' %}">  
+
+    {% block head %}{% endblock %}
 </head>
 <body>
 
@@ -64,8 +66,6 @@
         </aside>
 
         <main class="right-panel">
-
-            <!-- 💬 Messages Django -->
             {% if messages %}
                 <div class="system-messages">
                     {% for message in messages %}
@@ -74,7 +74,6 @@
                 </div>
             {% endif %}
 
-            <!-- 📦 Contenu principal -->
             {% block content %}{% endblock %}
         </main>
     </div>
@@ -86,7 +85,7 @@
     <!-- 🔁 Scripts interactifs -->
     <script>
     document.addEventListener("DOMContentLoaded", function () {
-        // Système de vote 👍👎
+        // 👍👎 Vote
         document.querySelectorAll(".vote-button").forEach(btn => {
             btn.addEventListener("click", function (e) {
                 e.preventDefault();
@@ -113,7 +112,7 @@
             });
         });
 
-        // Marquer meilleure réponse 🥇
+        // 🥇 Meilleure réponse
         document.querySelectorAll(".meilleure-button").forEach(btn => {
             btn.addEventListener("click", function (e) {
                 e.preventDefault();
@@ -137,7 +136,7 @@
             });
         });
 
-        // Recherche en direct des tags 🔍
+        // 🔍 Recherche tags
         const searchInput = document.getElementById("tagSearchInput");
         const tagsContainer = document.getElementById("tagsContainer");
         if (searchInput && tagsContainer) {
@@ -152,7 +151,7 @@
             });
         }
 
-        // Fonction pour récupérer le cookie CSRF
+        // 🍪 CSRF
         function getCookie(name) {
             let cookieValue = null;
             if (document.cookie && document.cookie !== "") {
@@ -168,11 +167,36 @@
             return cookieValue;
         }
 
-        // 👉 Afficher/Masquer formulaire de réponse
+        // 📝 Formulaire réponse
         window.toggleReponseForm = function () {
             const container = document.getElementById("reponseFormContainer");
             container.style.display = (container.style.display === "none") ? "block" : "none";
         };
+
+        // 🌙 Mode sombre manuel
+        const toggleBtn = document.getElementById("toggle-dark-mode");
+        const prefersDark = window.matchMedia("(prefers-color-scheme: dark)");
+
+        function applyDarkMode(enabled) {
+            if (enabled) {
+                document.documentElement.classList.add("dark-mode");
+                localStorage.setItem("darkMode", "true");
+                toggleBtn.textContent = "☀️ Mode clair";
+            } else {
+                document.documentElement.classList.remove("dark-mode");
+                localStorage.setItem("darkMode", "false");
+                toggleBtn.textContent = "🌙 Mode sombre";
+            }
+        }
+
+        const saved = localStorage.getItem("darkMode");
+        const isDark = saved === "true" || (saved === null && prefersDark.matches);
+        applyDarkMode(isDark);
+
+        toggleBtn.addEventListener("click", function () {
+            const current = document.documentElement.classList.contains("dark-mode");
+            applyDarkMode(!current);
+        });
     });
     </script>
 

@@ -1,0 +1,26 @@
+<div class="tag-questions-section">
+    <h3 class="tag-title">
+        Questions liées à <span class="tag-highlight">#{{ tag.nom }}</span>
+    </h3>
+
+    {% if questions %}
+        {% for question in questions %}
+            <div class="question-box">
+                <div class="question-box-header">
+                    <h4 class="question-title">{{ question.titre }}</h4>
+                    <a href="{% url 'questions:detail_question' question.id %}" class="question-detail-link">
+                        <i class="fas fa-arrow-right"></i> Voir détails
+                    </a>
+                </div>
+                <p class="question-extrait">{{ question.contenu|truncatewords:30 }}</p>
+                <p class="meta-info">
+                    Publiée le {{ question.date_publication|date:"d M Y à H:i" }}
+                    • 👍 Score : {{ question.score|default:"0" }}
+                    • 💬 {{ question.reponses.count }} réponse{{ question.reponses.count|pluralize }}
+                </p>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p class="empty-message">🤷 Aucune question liée à ce tag.</p>
+    {% endif %}
+</div>

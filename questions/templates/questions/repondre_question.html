@@ -1,22 +1,32 @@
 {% extends 'base.html' %}
-{% block titre_page %}{{ titre_page }}{% endblock %}
+
+{% block titre_page %}Répondre à la question{% endblock %}
 
 {% block content %}
-<div class="content-section form-section">
-    <h2>{{ titre_page }}</h2>
-    <p class="question-preview">↪️ {{ question.titre }}</p>
+<div class="question-block">
+    <h1 class="question-title">{{ question.titre }}</h1>
+    <p class="question-content">{{ question.contenu }}</p>
+    <small class="question-meta">Posté par {{ question.auteur }} le {{ question.date_creation|date:"d M Y" }}</small>
+</div>
 
-    <form method="post" class="styled-response-form">
+<div class="reponse-form-block">
+    <h2>✍️ Ajouter une réponse</h2>
+    <form method="post">
         {% csrf_token %}
-        <div class="form-field">
-            <label for="{{ form.contenu.id_for_label }}">
-                <i class="fas fa-reply"></i> {{ form.contenu.label }}
-            </label>
-            {{ form.contenu }}
-        </div>
-        <button type="submit" class="button-primary">
-            ✅ Soumettre la réponse
-        </button>
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Envoyer ma réponse</button>
     </form>
 </div>
+
+{% if question.reponses.exists %}
+    <h2 class="reponses-title">💬 Réponses déjà publiées</h2>
+    {% for reponse in question.reponses.all %}
+        <div class="reponse-card {% if reponse.est_meilleure_reponse %}reponse-validee{% endif %}">
+            <p>{{ reponse.contenu }}</p>
+            <small>Par {{ reponse.auteur }} le {{ reponse.date_creation|date:"d M Y" }}</small>
+        </div>
+    {% endfor %}
+{% else %}
+    <p class="no-reponses">🚫 Aucune réponse pour le moment.</p>
+{% endif %}
 {% endblock %}

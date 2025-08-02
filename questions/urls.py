@@ -21,6 +21,10 @@ urlpatterns = [
     path('reponse/modifier/<int:reponse_id>/', views.modifier_reponse, name='modifier_reponse'),
     path('reponse/supprimer/<int:reponse_id>/', views.supprimer_reponse, name='supprimer_reponse'),
     path('reponse/valider/<int:reponse_id>/', views.valider_reponse, name='valider_reponse'),
+    path('questions/tag/<int:tag_id>/', views.questions_par_tag, name='questions_par_tag'),
+    path('questions/fragment/tag/<int:tag_id>/', views.fragment_questions_par_tag, name='fragment_questions_par_tag'),
+    path('question/<int:question_id>/reponses/', views.voir_plus_reponses, name='voir_plus_reponses'),
+
 
 ]
 

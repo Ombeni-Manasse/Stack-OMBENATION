@@ -2,6 +2,154 @@
 {% block titre_page %}{{ titre_page }}{% endblock %}
 
 {% block content %}
+<style>
+    .content-section.form-section {
+        max-width: 800px;
+        margin: 40px auto;
+        background-color: #f9f9fc;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    .content-section h2 {
+        text-align: center;
+        font-size: 1.8em;
+        margin-bottom: 30px;
+        color: #003366;
+    }
+
+    .styled-question-form .form-field {
+        margin-bottom: 24px;
+    }
+
+    .styled-question-form label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: #333;
+        font-size: 1em;
+    }
+
+    .styled-question-form label i {
+        margin-right: 6px;
+        color: #0055aa;
+    }
+
+    .styled-question-form input[type="text"],
+    .styled-question-form textarea,
+    .styled-question-form select {
+        width: 100%;
+        padding: 12px 14px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        font-size: 1em;
+        background-color: #fff;
+        transition: border-color 0.3s ease;
+    }
+
+    .styled-question-form input:focus,
+    .styled-question-form textarea:focus,
+    .styled-question-form select:focus {
+        border-color: #0055aa;
+        outline: none;
+    }
+
+    .button-add-tag {
+        background-color: #e0ecff;
+        padding: 8px 14px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-weight: 500;
+        color: #003f88;
+        border: 1px solid #b3d1ff;
+        transition: background-color 0.3s ease;
+    }
+
+    .button-add-tag:hover {
+        background-color: #d0e4ff;
+    }
+
+    .help-text {
+        display: block;
+        margin-top: 6px;
+        font-size: 0.85em;
+        color: #666;
+    }
+
+    .button-primary {
+        display: block;
+        width: 100%;
+        padding: 14px;
+        background-color: #0055aa;
+        color: white;
+        font-weight: bold;
+        font-size: 1em;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .button-primary:hover {
+        background-color: #003f88;
+    }
+
+    .select2-container--default .select2-selection--multiple {
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        padding: 6px;
+        min-height: 44px;
+    }
+
+    .select2-container--default .select2-selection--multiple .select2-selection__choice {
+        background-color: #0055aa;
+        border: none;
+        color: white;
+        padding: 4px 10px;
+        border-radius: 6px;
+        margin-top: 6px;
+    }
+
+    .preview-section {
+        margin-top: 40px;
+        padding-top: 20px;
+        border-top: 1px solid #ddd;
+    }
+
+    .preview-section h3 {
+        font-size: 1.2em;
+        color: #003366;
+        margin-bottom: 12px;
+    }
+
+    .preview-box {
+        background-color: #fff;
+        border: 1px solid #ccc;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+        margin-bottom: 10px;
+    }
+
+    .preview-box h4 {
+        margin: 0 0 10px;
+        color: #222;
+    }
+
+    .preview-box p {
+        color: #555;
+        line-height: 1.5;
+    }
+
+    .validation-error {
+        color: #cc0000;
+        font-size: 0.9em;
+        font-weight: 500;
+    }
+</style>
+
 <div class="content-section form-section">
     <h2>{{ titre_page }}</h2>
     <form method="post" class="styled-question-form">
@@ -40,6 +188,17 @@
             📤 Publier la question
         </button>
     </form>
+
+    <div class="preview-section">
+        <h3>🔍 Prévisualisation</h3>
+        <div class="preview-box">
+            <h4 id="preview-title">Titre en cours…</h4>
+            <p id="preview-content">Contenu en cours de rédaction…</p>
+        </div>
+        <p id="validation-message" class="validation-error" style="display: none;">
+            ⚠️ Le contenu doit contenir au moins 10 mots.
+        </p>
+    </div>
 </div>
 
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
@@ -60,6 +219,34 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     }
+
+    const titreInput = document.querySelector('#id_titre');
+    const contenuInput = document.querySelector('#id_contenu');
+    const previewTitle = document.getElementById('preview-title');
+    const previewContent = document.getElementById('preview-content');
+    const form = document.querySelector('.styled-question-form');
+    const validationMessage = document.getElementById('validation-message');
+
+    function updatePreview() {
+        previewTitle.textContent = titreInput.value.trim() || "Titre en cours…";
+        previewContent.textContent = contenuInput.value.trim() || "Contenu en cours de rédaction…";
+    }
+
+    titreInput.addEventListener('input', updatePreview);
+    contenuInput.addEventListener('input', updatePreview);
+
+    form.addEventListener('submit', function (e) {
+        const wordCount = contenuInput.value.trim().split(/\s+/).length;
+        if (wordCount < 10) {
+            e.preventDefault();
+            validationMessage.style.display = 'block';
+            contenuInput.focus();
+        } else {
+            validationMessage.style.display = 'none';
+        }
+    });
+
+    updatePreview(); // initial
 });
 </script>
 {% endblock %}

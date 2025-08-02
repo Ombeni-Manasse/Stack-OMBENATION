@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<!-- Section sticky des tags -->
+<div class="sticky-tags-header">
+    {% for tag in tags %}
+        {% if tag_actif and tag.id == tag_actif.id %}
+            <a href="{% url 'questions:questions_par_tag' tag.id %}?actif=false"
+               class="tag-item tag-item-selected">
+                <i class="fas fa-tag"></i> {{ tag.nom }}
+            </a>
+        {% else %}
+            <a href="{% url 'questions:questions_par_tag' tag.id %}"
+               class="tag-item">
+                <i class="fas fa-tag"></i> {{ tag.nom }}
+            </a>
+        {% endif %}
+    {% endfor %}
+</div>
+
+<h2 class="tag-title">
+    {% if tag_actif %}
+        Questions liées au tag : <span class="tag-highlight">#{{ tag_actif.nom }}</span>
+    {% else %}
+        Sélectionne un tag pour filtrer les questions
+    {% endif %}
+</h2>
+
+{% if questions %}
+    {% for question in questions %}
+        <div class="question-box">
+            <div class="question-box-header">
+                <h3 class="question-title">{{ question.titre }}</h3>
+                <a href="{% url 'questions:detail_question' question.id %}" class="question-detail-link">
+                    <i class="fas fa-arrow-right"></i> Voir détails
+                </a>
+            </div>
+            <p class="question-extrait">{{ question.contenu|truncatewords:30 }}</p>
+        </div>
+    {% endfor %}
+
+    <!-- Pagination -->
+    <div class="pagination">
+        {% if questions.has_previous %}
+            <a href="?page={{ questions.previous_page_number }}" class="page-link">← Précédent</a>
+        {% endif %}
+        <span class="page-current">Page {{ questions.number }} / {{ questions.paginator.num_pages }}</span>
+        {% if questions.has_next %}
+            <a href="?page={{ questions.next_page_number }}" class="page-link">Suivant →</a>
+        {% endif %}
+    </div>
+{% else %}
+    <p class="empty-message">🤷 Aucune question trouvée pour ce tag.</p>
+{% endif %}
+
+{% endblock %}
