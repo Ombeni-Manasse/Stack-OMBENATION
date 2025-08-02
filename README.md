@@ -1,25 +1,33 @@
-# Stack-OMBENATION
+# 🧠 Stack-OMBENATION
 
-🎓 **Projet académique** réalisé avec Django
+🎓 **Projet académique** réalisé avec Django — une plateforme de type Q&R inspirée de StackOverflow, adaptée aux besoins pédagogiques et communautaires.
+## 🧩 Fonctionnalités principales
 
-Cette plateforme permet aux utilisateurs :
-- 💬 de poser des questions
-- 🗳️ de voter pour les meilleures réponses
-- 🏅 de marquer une réponse comme “meilleure”
-- 🏷️ de filtrer par tags
+- 💬 **Poser des questions** avec titre, description et tags
+- 🗳️ **Voter** pour les réponses les plus pertinentes
+- 🏅 **Marquer une réponse comme “meilleure”**
+- 🏷️ **Filtrer les questions par tags**
+- 🔍 **Recherche dynamique** des questions
+- 📄 **Pagination AJAX** pour une navigation fluide
+- 👤 **Gestion des rôles utilisateurs** (utilisateur simple, gestionnaire, admin)
 
 ## ⚙️ Technologies utilisées
 
-- Python 3.13
-- Django 5.2
-- HTML/CSS avec FontAwesome
-- Git & GitHub
+| Outil | Version | Rôle |
+|------|---------|------|
+| Python | 3.13 | Langage principal |
+| Django | 5.2 | Framework web |
+| HTML/CSS | — | Structure et style |
+| FontAwesome | — | Icônes |
+| Git & GitHub | — | Versioning et publication |
 
 ## 🧪 Instructions pour tester en local
 
 ```bash
 git clone https://github.com/Ombeni-Manasse/Stack-OMBENATION.git
 cd Stack-OMBENATION
+python -m venv venv
+source venv/bin/activate  # ou venv\Scripts\activate sur Windows
+pip install -r requirements.txt
 python manage.py migrate
 python manage.py runserver
-
